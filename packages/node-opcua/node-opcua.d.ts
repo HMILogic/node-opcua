@@ -126,6 +126,71 @@ export declare class OPCUAClientBase {
     on(event: string, eventHandler: Function): OPCUAClientBase;
 }
 
+export declare class BinaryStream {
+    constructor(data: null | Buffer | number);
+
+    static rewind(): null;
+    calculateByteLength(str: string): number;
+    // Documentation unclear wether functions static or not (parameters suggest static, docu says no)
+    // http://node-opcua.github.io/api_doc/0.2.0/classes/BinaryStream.html
+    // decodeArray(stream: BinaryStream, decode_element_func: () => any): Array<any>;
+    // encodeArray(arr: Array<any>, stream: BinaryStream, encode_element_func: () => any): any;
+    readArrayBuffer(length: number): Uint8Array;
+    readByte(): number;
+    readByteStream(): Buffer;
+    readDouble(): number;
+    readFloat(): number;
+    readInt16(): number;
+    readInteger(): number;
+    readUInt16(): number;
+    readUInt32(): number;
+    readerUInt8(): number;
+    writeArrayBuffer(arrayBuf: ArrayBuffer, offset: number, length: number): void;
+    writeByteStream(buf: Buffer): void;
+    writeDouble(value: number): void;
+    writeFloat(value: number): void;
+    writeInt16(value: number): void;
+    writeInt8(value: number): void;
+    writeInteger(value: number): void;
+    writeUInt16(value: number): void;
+    writeUInt32(value: number): void;
+    writeUInt8(value: number): number;
+}
+
+export declare class BaseUAObject {
+    constructor(stream: BinaryStream, options: any);
+    binaryStoreSize(): number;
+    decode_debug(stream: BinaryStream, options: any): void;
+    isValid(): boolean;
+    toString(): string;
+}
+
+export interface ResponseHeaderOptions {
+    timestamp?: any;
+    requestHandle?: number;
+    serviceResult?: StatusCode;
+    serviceDiagnostics?: DiagnosticInfo;
+    stringTable?: string;
+    additionalHeader: any;
+}
+
+export declare class ResponseHeader extends BaseUAObject {
+    additionalHeader: any;
+    requestHandle: number;
+    serviceDiagnostic: DiagnosticInfo;
+    serviceResult: StatusCode;
+    stringTable: string;
+    timeStamp: any;
+    constructor(options: ResponseHeaderOptions);
+    decode(stream: BinaryStream, option: object): any;
+    encode(stream: BinaryStream): any;
+}
+
+export interface BrowserResponseOptions {
+    responseHeader?: ResponseHeader;
+    results?: BrowseResult[];
+    diagnosticInfos?: DiagnosticInfo[];
+}
 export interface BrowseResponse {}
 
 export declare enum NodeIdType {
